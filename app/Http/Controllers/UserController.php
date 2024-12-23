@@ -7,12 +7,19 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function index(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application
+    public function index(Request $request)
     {
-        $users = User::all();
+        $search = $request->input('search');
 
-//        dd($users);
-        return view('users.index', compact('users'));
+        if ($search) {
+            // Agar qidiruv so'rovi mavjud bo'lsa
+            $users = User::where('name', 'LIKE', '%' . $search . '%')->paginate(10);
+        } else {
+            // Agar qidiruv bo'sh bo'lsa hech narsa qaytarmaslik
+            $users = collect(); // Bo'sh kolleksiya
+        }
+
+        return view('users.index', compact('users', 'search'));
     }
 
     public function show(User $user): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application
