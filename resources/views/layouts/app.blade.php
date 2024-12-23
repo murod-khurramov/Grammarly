@@ -18,6 +18,7 @@
 </head>
 <body>
 <div id="app">
+    <!-- resources/views/layouts/app.blade.php -->
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">
@@ -30,22 +31,33 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Left Side Of Navbar -->
                 <ul class="navbar-nav me-auto">
-
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('/') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('users.index') }}">Users</a>
+                    </li>
                 </ul>
 
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ms-auto">
+                    <!-- Faqat Users sahifasida qidiruvni ko'rsatish -->
+                    @if(request()->routeIs('users.index'))
+                        <form action="{{ route('users.index') }}" method="GET" class="d-flex me-3">
+                            <input type="text" name="search" placeholder="Search users" value="{{ request('search') }}" class="form-control" />
+                        </form>
+                    @endif
+
                     <!-- Authentication Links -->
                     @guest
                         @if (Route::has('login'))
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                <a class="nav-link" href="{{ route('login') }}">Login</a>
                             </li>
                         @endif
-
                         @if (Route::has('register'))
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                <a class="nav-link" href="{{ route('register') }}">Register</a>
                             </li>
                         @endif
                     @else
@@ -53,17 +65,15 @@
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 {{ Auth::user()->name }}
                             </a>
-
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="{{ route('profile') }}">
                                     Profil
                                 </a>
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                    {{ __('Logout') }}
+                                                 document.getElementById('logout-form').submit();">
+                                    Logout
                                 </a>
-
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                     @csrf
                                 </form>
@@ -74,6 +84,7 @@
             </div>
         </div>
     </nav>
+
 
     <main class="py-4">
         @yield('content')
